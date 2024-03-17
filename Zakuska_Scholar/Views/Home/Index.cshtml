@@ -1,0 +1,169 @@
+﻿@model searchDto
+@{
+    ViewData["Title"] = "Home Page";
+}
+<div class="container mb-4" style="margin-bottom: 20px;">
+    @using (Html.BeginForm("SearchPost", "Home", FormMethod.Post))
+    {
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <!-- Değişiklik yapıldı: col-md-8 -->
+                <!-- Search Section -->
+                @Html.TextBoxFor(model => Model.search, new { @class = "form-control", style = "font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 16px; color: #333; background-color: #f5f5f5; border: 1px solid #ccc; border-radius: 5px;", placeholder = "Arama yapın..." })
+            </div>
+            <div class="col-md-1">
+                <!-- Değişiklik yapıldı: col-md-1 -->
+                <!-- Search Button -->
+                <button type="submit" name="submitButton" value="search" class="btn btn-primary btn-block" style="font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 16px;">ARA</button>
+            </div>
+        </div>
+
+
+        <!-- Filter and Sort Section -->
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-3">
+                <!-- Filter Section 1 -->
+                <div class="card mb-4">
+                    <div class="card-header" style="font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 16px; color: #333">
+                        Yayınlanma Yılına Göre Filtrele
+                    </div>
+                    <div class="card-body bold">
+                        <!-- Year Dropdown -->
+                        @if (Model != null && Model.articles != null && Model.articles.Any())
+                        {
+                            List<int> years = new List<int>();
+                            foreach (var item in Model.articles)
+                            {
+                                int year;
+                                if (Int32.TryParse(item.timeOfPublish, out year))
+                                {
+                                    if (!years.Contains(year))
+                                        years.Add(year);
+                                }
+                            }
+
+                            @Html.DropDownList("selectedYear", new SelectList(years), "-- Yıl Seçin --", new { @class = "form-control", style = "margin-bottom: 10px; " })
+                        }
+                        else
+                        {
+                            @Html.DropDownList("selectedYear", new SelectList(new List<int> { }), "-- Yıl Seçin --", new { @class = "form-control", style = "margin-bottom: 10px; " })
+                        }
+                        <button type="submit" name="submitButton" value="applyFilters1" class="btn btn-success btn-block" style="font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 16px;">FİLTRELE</button>
+                        <!-- Remove Filter Button -->
+                        <button type="submit" name="submitButton" value="removeFilters" class="btn btn-danger btn-block" style="font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 16px;">X</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <!-- Filter Section 2 -->
+                <div class="card mb-4">
+                    <div class="card-header" style="font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 16px; color: #333">
+                        Makale Türüne Göre Filtrele
+                    </div>
+                    <div class="card-body">
+                        <!-- Year Dropdown -->
+                        @if (Model != null && Model.articles != null && Model.articles.Any())
+                        {
+                            List<string> types = new List<string>();
+                            foreach (var item in Model.articles)
+                            {
+                                string publishType = item.typeOfArticle;
+                                if (!types.Contains(publishType) && publishType!= "bos")
+                                    types.Add(publishType);
+                            }
+
+                            @Html.DropDownList("selectedType", new SelectList(types), "-- Tür Seçin --", new { @class = "form-control", style = "margin-bottom: 10px;" })
+                        }
+                        else
+                            @Html.DropDownList("selectedType", new SelectList(new List<string> { }), "-- Tür Seçin --", new { @class = "form-control", style = "margin-bottom: 10px;" })
+
+
+                        <button type="submit" name="submitButton" value="applyFilters2" class="btn btn-success btn-block" style="font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 16px;">FİLTRELE</button>
+                        <!-- Remove Filter Button -->
+                        <button type="submit" name="submitButton" value="removeFilters" class="btn btn-danger btn-block" style="font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 16px;">X</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card mb-4">
+                    <div class="card-header" style="font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 16px; color: #333">
+                        Sıralama Seçenekleri
+                    </div>
+                    <div class="card-body">
+                        <!-- Sort Dropdown -->
+                        @Html.DropDownList("selectedSort", new SelectList(new List<string> { "Yıl", "Alıntı Sayısı" }), "-- Sırala --", new { @class = "form-control", style = "margin-bottom: 10px;" })
+                        <!-- Sort Button -->
+                        <button type="submit" name="submitButton" value="sort" class="btn btn-success btn-block" style="font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 16px;">SIRALA</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if (Model.duzeltilmisSearch != null && Model.duzeltilmisSearch != "")
+        {
+            <div class="col-md-6 mx-auto text-center" style="border: 4px solid red; padding: 10px; border-radius: 5px;">
+                <!-- Bunu mu demek istediniz Paragrafı -->
+                <p style="font-size: 20px; margin-top: 10px;">
+                    <span style="color: black; font-weight: bold;">Düzeltilmiş arama önerisi:</span>
+                    <a href="@Url.Action("wrongResult", "Home", new { str = Model.duzeltilmisSearch })" style="color: navy; font-size: 20px; font-weight: bold; text-decoration: none; margin-left: 2px;">@Model.duzeltilmisSearch</a>
+                </p>
+            </div>
+        }
+
+
+
+
+
+
+    }
+</div>
+
+
+
+@using (Html.BeginForm("GetArticle", "Home", FormMethod.Get))
+{
+    if (Model == null)
+    {
+        @using (Html.BeginForm("SearchPost", "Home", FormMethod.Post))
+        {
+            <script>
+                // JavaScript kullanarak formu post etme işlemi
+                document.getElementById('searchButton').addEventListener('click', function () {
+                    document.getElementById('searchForm').action = '@Url.Action("SearchPost", "Home")'; // Form action'ını güncelle
+                    document.getElementById('searchForm').submit();
+                });
+
+                document.getElementById('filterButton').addEventListener('click', function () {
+                    document.getElementById('searchForm').action = '@Url.Action("SearchPost", "Home")'; // Örnek bir Filtrele aksiyonu için form action'ını güncelle
+                    document.getElementById('searchForm').submit();
+                });
+            </script>
+        }
+    }
+    @if (Model != null && Model.articles != null && Model.articles.Count > 0)
+    {
+        <div class="container" style="margin-bottom: 20px;">
+            <div class="row" id="myDiv" runat="server">
+                <div class="col-md-10 offset-md-1">
+                    @foreach (var article in Model.articles)
+                    {
+                        if (article.articleName == "bos")
+                            continue;
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <a href="@Url.Action("Detay", "Home", new { id = article.articleID })" target="_blank" class="btn btn-primary" style="background-color: #ffc107; color: black;">
+                                    <!-- Değişiklik yapıldı -->
+                                    <h3 class="card-title" style="font-family: Montserrat, sans-serif; font-weight: 600;">@article.articleName</h3>
+                                </a>
+                                <p class="card-text text-muted" style="margin-bottom: 10px; font-family: Montserrat, sans-serif; font-weight: 600;">@article.typeOfArticle</p>
+                                <p class="card-text text-muted" style="margin-bottom: 10px; font-family: Montserrat, sans-serif; font-weight: 600;">@article.nameOfPublisher</p>
+                                <p class="card-text text-muted" style="margin-bottom: 10px; font-family: Montserrat, sans-serif; font-weight: 600;">@article.nameOfWriters | @article.timeOfPublish | @article.numOfQuote</p>
+                                <p class="card-text" style="margin-bottom: 10px; font-family: Montserrat, sans-serif; font-weight: 600;">@article.summary.Substring(0, article.summary.Length / 3)...</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+    }
+}

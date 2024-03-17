@@ -1,0 +1,78 @@
+﻿@model articleModel
+@{
+    ViewData["Title"] = "Detay";
+}
+
+<style>
+    .card-text-wrapper {
+        border-top: 1px solid #dee2e6;
+        border-bottom: 1px solid #dee2e6;
+        padding: 10px 0;
+    }
+        
+        .card-text-wrapper:nth-child(even) {
+            background-color: #f8f9fa; 
+        }
+    
+    .card-text {
+        color: #333; 
+    }
+    .detail-title {
+        text-align: center;
+        border: 1px solid #ffc107; 
+        padding: 10px;
+        border-radius: 5px; 
+        margin-bottom: 20px;
+    }
+
+    .card.mb-4 {
+        border: 1px solid #ffc107; 
+        border-radius: 5px; 
+    }
+</style>
+
+<div class="container" style="margin-bottom: 20px;">
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
+            <h1 class="detail-title">@Model.articleName</h1>
+            <div class="card mb-4">
+                <div class="card-body">
+                    
+                    <div class="card-text-wrapper">
+                        <p class="card-text" style="font-family: Montserrat, sans-serif; font-weight: 600;">Yazar(lar): @Model.nameOfWriters</p>
+                    </div>
+                    <div class="card-text-wrapper">
+                        <p class="card-text" style="font-family: Montserrat, sans-serif; font-weight: 600;">Makale Türü: @Model.typeOfArticle</p>
+                    </div>
+                    <div class="card-text-wrapper">
+                        <p class="card-text" style="font-family: Montserrat, sans-serif; font-weight: 600;">Yayınlanma Tarihi: @Model.timeOfPublish</p>
+                    </div>
+                    <div class="card-text-wrapper">
+                        <p class="card-text" style="font-family: Montserrat, sans-serif; font-weight: 600;">Yayıncı: @Model.nameOfPublisher</p>
+                    </div>
+                    <div class="card-text-wrapper">
+                        <p class="card-text" style="font-family: Montserrat, sans-serif; font-weight: 600;">Arama Anahtarları: @Model.searchKeys</p>
+                    </div>
+                    <div class="card-text-wrapper">
+                        <p class="card-text" style="font-family: Montserrat, sans-serif; font-weight: 600;">Makale Anahtarları: @Model.articleKeys</p>
+                    </div>
+                    <div class="card-text-wrapper">
+                        <p class="card-text" style="font-family: Montserrat, sans-serif; font-weight: 600;">Makale ID: @Model.articleID</p>
+                    </div>
+                    <div class="card-text-wrapper">
+                        <p class="card-text" style="font-family: Montserrat, sans-serif; font-weight: 600;">Referanslar: @Model.references</p>
+                    </div>
+                    <div class="card-text-wrapper">
+                        <p class="card-text" style="font-family: Montserrat, sans-serif; font-weight: 600;">Özet: @Model.summary</p>
+                    </div>
+                    <a href="@Model.url" target="_blank" style="text-decoration: none; font-family: Montserrat, sans-serif; font-weight: 600; color: #007bff;">
+                        <!-- Renk ve stil değiştirildi -->
+                        <div class="card-text-wrapper" style="background-color:aliceblue">
+                            <p class="card-text" style="margin-top: 10px;color: #007bff;">Makale Linki: @Model.url</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
